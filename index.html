@@ -3,240 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>経済 4択問題集（全20問）</title>
-<style>
-  :root{
-    --bg:#0f1216; --card:#181d24; --line:#2a323d; --fg:#e8ecf1; --sub:#9aa7b6;
-    --accent:#4c8dff; --ok:#2ecc71; --ng:#ff5f6d;
-  }
-  @media (prefers-color-scheme: light){
-    :root{ --bg:#f4f6f9; --card:#ffffff; --line:#dde3ea; --fg:#1b2029; --sub:#5d6b7c; }
-  }
-  *{box-sizing:border-box}
-  body{
-    margin:0; padding:24px 16px 60px;
-    background:var(--bg); color:var(--fg);
-    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,system-ui,sans-serif;
-    line-height:1.7;
-  }
-  .wrap{max-width:720px;margin:0 auto}
-  h1{font-size:1.4rem;margin:0 0 4px}
-  .lead{color:var(--sub);font-size:.9rem;margin:0 0 20px}
-  .card{
-    background:var(--card);border:1px solid var(--line);border-radius:14px;
-    padding:22px;box-shadow:0 2px 10px rgba(0,0,0,.08);
-  }
-  .bar{height:6px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:18px}
-  .bar>i{display:block;height:100%;background:var(--accent);width:0;transition:width .25s}
-  .meta{display:flex;justify-content:space-between;font-size:.85rem;color:var(--sub);margin-bottom:10px}
-  .q{font-size:1.1rem;font-weight:700;margin:0 0 18px}
-  .opts{display:grid;gap:10px}
-  button.opt{
-    text-align:left;width:100%;padding:13px 15px;border-radius:10px;cursor:pointer;
-    border:1px solid var(--line);background:transparent;color:var(--fg);
-    font:inherit;transition:.15s;
-  }
-  button.opt:hover:not(:disabled){border-color:var(--accent);transform:translateX(2px)}
-  button.opt:disabled{cursor:default;opacity:.5}
-  .mark{font-weight:700;margin-right:8px;color:var(--sub)}
-  .next{
-    margin-top:16px;padding:11px 22px;border:none;border-radius:9px;
-    background:var(--accent);color:#fff;font:inherit;font-weight:700;cursor:pointer;
-  }
-  .score{font-size:2.6rem;font-weight:800;margin:6px 0}
-  .score small{font-size:1rem;color:var(--sub);font-weight:400}
-  .rank{color:var(--accent);font-weight:700;margin-bottom:18px}
-  ul.rev{list-style:none;padding:0;margin:18px 0 0;border-top:1px solid var(--line)}
-  ul.rev li{padding:12px 0;border-bottom:1px solid var(--line);font-size:.92rem}
-  ul.rev .t{font-weight:700}
-  ul.rev .a{color:var(--sub);font-size:.87rem}
-  .o-i{color:var(--ok);font-weight:700;margin-right:6px}
-  .x-i{color:var(--ng);font-weight:700;margin-right:6px}
-  .hide{display:none}
-</style>
+<title>経済 4択問題集</title>
+<link rel="stylesheet" href="assets/quiz.css">
 </head>
 <body>
 <div class="wrap">
   <h1>経済 4択問題集</h1>
-  <p class="lead">全20問・正誤は最後にまとめて発表します</p>
+  <p class="lead">レベルを選んでください。各20問・4択、正誤は最後にまとめて発表します。</p>
 
-  <div class="card" id="quiz">
-    <div class="bar"><i id="prog"></i></div>
-    <div class="meta"><span id="count"></span></div>
-    <p class="q" id="qtext"></p>
-    <div class="opts" id="opts"></div>
-  </div>
+  <div class="levels">
+    <a class="level" href="beginner.html">
+      <h2>初級<span class="badge lv1">LEVEL 1</span></h2>
+      <p>経済ニュースがわかるようになる基本用語としくみ。高校の政治・経済レベル。</p>
+      <div class="tags">GDP／インフレ・デフレ／需要と供給／円高円安／金融・財政政策／経済学者</div>
+    </a>
 
-  <div class="card hide" id="result">
-    <div class="meta">結果</div>
-    <div class="score"><span id="sc"></span><small> / 20 問正解</small></div>
-    <div class="rank" id="rank"></div>
-    <button class="next" id="retry">もう一度挑戦する</button>
-    <ul class="rev" id="rev"></ul>
+    <a class="level" href="intermediate.html">
+      <h2>中級<span class="badge lv2">LEVEL 2</span></h2>
+      <p>制度と統計指標の正確な理解を問う。簡単な計算問題を含む。</p>
+      <div class="tags">三面等価／GNI／乗数／プライマリーバランス／公共財／コアCPI／経常収支／関税</div>
+    </a>
+
+    <a class="level" href="advanced.html">
+      <h2>上級<span class="badge lv3">LEVEL 3</span></h2>
+      <p>ミクロ・マクロ経済学の理論と計算。公務員試験・経済学部の中級レベル。</p>
+      <div class="tags">IS-LM／流動性の罠／マンデル＝フレミング／独占価格／外部性／コースの定理／信用創造／消費者余剰</div>
+    </a>
   </div>
 </div>
-
-<script>
-const QUESTIONS = [
-  {q:"GDP（国内総生産）が表すものはどれか。",
-   c:["一定期間に国内で生み出された付加価値の合計","国民が保有する資産の総額","政府が1年間に集めた税金の総額","国内の企業の売上高の単純合計"],a:0,
-   e:"GDPはフロー（一定期間の生産）の指標で、国内で新たに生み出された付加価値の合計。売上高の単純合計だと中間投入が二重計上になる。"},
-
-  {q:"インフレーションの説明として正しいものはどれか。",
-   c:["物価が継続的に上昇し、貨幣価値が下がること","物価が継続的に下落すること","失業率が上がること","為替レートが固定されること"],a:0,
-   e:"インフレ＝物価上昇＝お金の価値の低下。逆に物価が下がり続けるのがデフレーション。"},
-
-  {q:"一般的な需要曲線の形状はどれか。",
-   c:["右下がり","右上がり","水平","U字型"],a:0,
-   e:"価格が下がるほど需要量は増えるため右下がり。供給曲線は逆に右上がりになる。"},
-
-  {q:"中央銀行が政策金利を引き上げたときに一般に期待される効果はどれか。",
-   c:["借入が減り景気が抑制され、インフレが鎮まる","消費と投資が急増する","通貨供給量が増える","失業率が必ず下がる"],a:0,
-   e:"利上げは金融引き締め。資金調達コストが上がって投資・消費が抑えられ、物価上昇を抑える方向に働く。"},
-
-  {q:"日本の中央銀行はどれか。",
-   c:["日本銀行","財務省","金融庁","日本政策投資銀行"],a:0,
-   e:"日本銀行は「発券銀行」「銀行の銀行」「政府の銀行」の3つの役割を持つ。財務省・金融庁は政府機関で中央銀行ではない。"},
-
-  {q:"1ドル＝100円から1ドル＝130円になった。この変化の呼び方と、有利になる側の組み合わせはどれか。",
-   c:["円安・輸出企業に有利","円高・輸出企業に有利","円安・輸入企業に有利","円高・輸入企業に有利"],a:0,
-   e:"1ドルを買うのに多くの円が必要＝円の価値が下落＝円安。輸出品の外貨建て価格が下がるので輸出企業に追い風、輸入企業には逆風。"},
-
-  {q:"経済学でいう「機会費用」の意味はどれか。",
-   c:["ある選択をしたために諦めた選択肢のうち、最大の価値","実際に支払った金額の合計","将来発生する見込みの費用","固定費と変動費の合計"],a:0,
-   e:"機会費用は実際の支出（会計上の費用）ではなく、犠牲にした最善の代替案の価値。意思決定の合理性を判断する基準になる。"},
-
-  {q:"独占市場の特徴として正しいものはどれか。",
-   c:["供給者が1社しかなく、価格支配力を持つ","多数の企業が同質財を売る","価格は必ず市場で最安になる","参入・退出が完全に自由である"],a:0,
-   e:"独占企業はプライスメイカーとして価格を左右できる。多数の企業が同質財を売り、参入退出が自由なのは完全競争市場。"},
-
-  {q:"消費税の税制上の分類はどれか。",
-   c:["間接税","直接税","目的税のみに分類される","地方税のみで国税ではない"],a:0,
-   e:"納税者（企業）と担税者（消費者）が異なるため間接税。所得税・法人税は直接税。"},
-
-  {q:"名目GDPと実質GDPの違いとして正しいものはどれか。",
-   c:["実質GDPは物価変動の影響を取り除いた値である","実質GDPは輸出入を除いた値である","名目GDPは政府支出を含まない","両者は必ず一致する"],a:0,
-   e:"名目GDPはその年の価格で評価した値。物価の影響を除いたのが実質GDPで、両者の比から物価水準を示すGDPデフレーターが求まる。"},
-
-  {q:"完全失業率を計算するときの分母となるのはどれか。",
-   c:["労働力人口","総人口","15歳以上の全人口","就業者数"],a:0,
-   e:"完全失業率＝完全失業者÷労働力人口。労働力人口は就業者＋完全失業者で、働く意思のない非労働力人口は含まない。"},
-
-  {q:"財政政策の主体と代表的な手段の組み合わせはどれか。",
-   c:["政府 ─ 公共投資や増減税","中央銀行 ─ 公開市場操作","民間銀行 ─ 貸出金利の設定","企業 ─ 設備投資"],a:0,
-   e:"財政政策は政府が歳出・税制を通じて景気を調整する。中央銀行が金利や資金量を動かすのは金融政策。"},
-
-  {q:"他の条件が一定のまま、ある財の供給だけが増えたとき、均衡価格と均衡取引量はどうなるか。",
-   c:["価格は下がり、取引量は増える","価格は上がり、取引量は減る","価格・取引量ともに上がる","価格・取引量ともに変わらない"],a:0,
-   e:"供給曲線が右にシフトすると、需要曲線との交点は右下に移動する。つまり安くたくさん売買される。"},
-
-  {q:"市場メカニズムを「見えざる手」と表現した経済学者は誰か。",
-   c:["アダム・スミス","ケインズ","マルクス","フリードマン"],a:0,
-   e:"『国富論』でのアダム・スミスの言葉。各人が私益を追求すると結果的に社会全体の利益にもつながる、という市場観を示す。"},
-
-  {q:"「比較優位」に基づく自由貿易の利益を説いた経済学者は誰か。",
-   c:["リカード","マルサス","シュンペーター","ワルラス"],a:0,
-   e:"デヴィッド・リカードの比較生産費説。すべての財で劣位でも、相対的に得意な財に特化して交換すれば双方が得をする。"},
-
-  {q:"「有効需要の原理」を唱え、不況時の政府支出拡大を主張したのは誰か。",
-   c:["ケインズ","アダム・スミス","ハイエク","リカード"],a:0,
-   e:"ケインズは『一般理論』で、供給ではなく需要が生産量と雇用を決めるとし、不況期の財政出動を正当化した。"},
-
-  {q:"エンゲル係数が示すものはどれか。",
-   c:["消費支出に占める食料費の割合","所得に占める貯蓄の割合","所得格差の大きさ","物価の上昇率"],a:0,
-   e:"エンゲル係数は生活水準の目安で、一般に所得が低いほど高くなる。所得格差を測る代表的指標はジニ係数。"},
-
-  {q:"中央銀行が公開市場操作で国債を市中から買い入れると、どうなるか。",
-   c:["市中の通貨供給量が増え、金融緩和になる","市中の通貨供給量が減り、金融引き締めになる","通貨供給量は変わらない","必ず円高になる"],a:0,
-   e:"買いオペは中央銀行が代金を市中に払うので資金供給が増える（金融緩和）。逆に国債を売る売りオペは資金を吸収する。"},
-
-  {q:"累進課税制度の説明として正しいものはどれか。",
-   c:["所得が高いほど高い税率が適用される","全員に同じ税率が適用される","所得が高いほど税率が下がる","消費額に応じて税率が変わる"],a:0,
-   e:"日本の所得税が代表例。高所得者ほど負担率が高くなり、所得再分配（格差是正）とビルトインスタビライザーの機能を持つ。"},
-
-  {q:"デフレスパイラルの説明として正しいものはどれか。",
-   c:["物価下落と企業収益・賃金の悪化が互いを加速させる悪循環","物価上昇と賃金上昇が繰り返される状態","景気が過熱して金利が急騰する状態","為替が急激に円安に進む状態"],a:0,
-   e:"物価下落→売上減→賃下げ・雇用減→需要減→さらに物価下落、というループ。実質債務負担も重くなり不況が長期化しやすい。"}
-];
-
-const L = ["A","B","C","D"];
-let order = [], idx = 0, score = 0, log = [];
-
-const $ = id => document.getElementById(id);
-
-function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]];} return a; }
-
-function start(){
-  idx = 0; score = 0; log = [];
-  // 選択肢の並びを問題ごとにシャッフル（出題順は固定）
-  order = QUESTIONS.map(q => {
-    const pairs = q.c.map((t,i)=>({t, ok:i===q.a}));
-    shuffle(pairs);
-    return {q:q.q, e:q.e, c:pairs.map(p=>p.t), a:pairs.findIndex(p=>p.ok)};
-  });
-  $("result").classList.add("hide");
-  $("quiz").classList.remove("hide");
-  render();
-}
-
-function render(){
-  const item = order[idx];
-  $("prog").style.width = (idx/QUESTIONS.length*100) + "%";
-  $("count").textContent = `第 ${idx+1} 問 / ${QUESTIONS.length}`;
-  $("qtext").textContent = item.q;
-
-  const box = $("opts");
-  box.innerHTML = "";
-  item.c.forEach((text,i)=>{
-    const b = document.createElement("button");
-    b.className = "opt";
-    b.innerHTML = `<span class="mark">${L[i]}</span>`;
-    b.appendChild(document.createTextNode(text));
-    b.onclick = () => answer(i);
-    box.appendChild(b);
-  });
-}
-
-function answer(sel){
-  const item = order[idx];
-  const ok = sel === item.a;
-  if(ok) score++;
-  log.push({q:item.q, ok, e:item.e, your:item.c[sel], right:item.c[item.a]});
-
-  // 正誤はその場では見せず、そのまま次の問題へ
-  [...$("opts").children].forEach(b => b.disabled = true);
-  idx++;
-  if(idx < QUESTIONS.length) render();
-  else finish();
-}
-
-function finish(){
-  $("quiz").classList.add("hide");
-  $("result").classList.remove("hide");
-  $("sc").textContent = score;
-
-  const r = score/QUESTIONS.length;
-  $("rank").textContent =
-    r === 1   ? "満点！ 完璧です" :
-    r >= 0.8  ? "優秀！ 基礎はしっかり身についています" :
-    r >= 0.6  ? "合格ライン。間違えた分野を復習しましょう" :
-    r >= 0.4  ? "もう一歩。解説を読み直してみましょう" :
-                "基礎からじっくり復習しましょう";
-
-  const ul = $("rev");
-  ul.innerHTML = "";
-  log.forEach((l,i)=>{
-    const li = document.createElement("li");
-    const mark = l.ok ? '<span class="o-i">○</span>' : '<span class="x-i">×</span>';
-    const yours = l.ok ? "" : `あなたの解答：${l.your}<br>`;
-    li.innerHTML = `<div class="t">${mark}第${i+1}問 ${l.q}</div>`
-                 + `<div class="a">${yours}正解：${l.right}<br>${l.e}</div>`;
-    ul.appendChild(li);
-  });
-}
-
-$("retry").onclick = start;
-start();
-</script>
 </body>
 </html>

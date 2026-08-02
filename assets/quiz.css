@@ -1,0 +1,67 @@
+:root{
+  --bg:#0f1216; --card:#181d24; --line:#2a323d; --fg:#e8ecf1; --sub:#9aa7b6;
+  --accent:#4c8dff; --ok:#2ecc71; --ng:#ff5f6d;
+}
+@media (prefers-color-scheme: light){
+  :root{ --bg:#f4f6f9; --card:#ffffff; --line:#dde3ea; --fg:#1b2029; --sub:#5d6b7c; }
+}
+*{box-sizing:border-box}
+body{
+  margin:0; padding:24px 16px 60px;
+  background:var(--bg); color:var(--fg);
+  font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,system-ui,sans-serif;
+  line-height:1.7;
+}
+.wrap{max-width:720px;margin:0 auto}
+h1{font-size:1.4rem;margin:0 0 4px}
+.lead{color:var(--sub);font-size:.9rem;margin:0 0 20px}
+.badge{
+  display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.05em;
+  padding:2px 9px;border-radius:99px;border:1px solid currentColor;margin-left:8px;vertical-align:3px;
+}
+.lv1{color:#2ecc71} .lv2{color:#f5a623} .lv3{color:#ff5f6d}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:14px;
+  padding:22px;box-shadow:0 2px 10px rgba(0,0,0,.08);
+}
+.bar{height:6px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:18px}
+.bar>i{display:block;height:100%;background:var(--accent);width:0;transition:width .25s}
+.meta{display:flex;justify-content:space-between;font-size:.85rem;color:var(--sub);margin-bottom:10px}
+.q{font-size:1.1rem;font-weight:700;margin:0 0 18px;white-space:pre-wrap}
+.opts{display:grid;gap:10px}
+button.opt{
+  text-align:left;width:100%;padding:13px 15px;border-radius:10px;cursor:pointer;
+  border:1px solid var(--line);background:transparent;color:var(--fg);
+  font:inherit;transition:.15s;
+}
+button.opt:hover:not(:disabled){border-color:var(--accent);transform:translateX(2px)}
+button.opt:disabled{cursor:default;opacity:.5}
+.mark{font-weight:700;margin-right:8px;color:var(--sub)}
+.next{
+  margin-top:16px;margin-right:10px;padding:11px 22px;border:none;border-radius:9px;
+  background:var(--accent);color:#fff;font:inherit;font-weight:700;cursor:pointer;
+}
+.score{font-size:2.6rem;font-weight:800;margin:6px 0}
+.score small{font-size:1rem;color:var(--sub);font-weight:400}
+.rank{color:var(--accent);font-weight:700;margin-bottom:18px}
+ul.rev{list-style:none;padding:0;margin:18px 0 0;border-top:1px solid var(--line)}
+ul.rev li{padding:12px 0;border-bottom:1px solid var(--line);font-size:.92rem}
+ul.rev .t{font-weight:700}
+ul.rev .a{color:var(--sub);font-size:.87rem;margin-top:4px}
+.o-i{color:var(--ok);font-weight:700;margin-right:6px}
+.x-i{color:var(--ng);font-weight:700;margin-right:6px}
+.hide{display:none}
+.back{display:inline-block;margin-top:20px;color:var(--sub);font-size:.88rem}
+a{color:var(--accent)}
+
+/* ---- レベル選択ページ ---- */
+.levels{display:grid;gap:14px;margin-top:6px}
+a.level{
+  display:block;text-decoration:none;color:inherit;
+  background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px 22px;
+  transition:.15s;
+}
+a.level:hover{border-color:var(--accent);transform:translateY(-2px)}
+a.level h2{margin:0 0 6px;font-size:1.12rem}
+a.level p{margin:0;color:var(--sub);font-size:.88rem}
+a.level .tags{margin-top:8px;font-size:.8rem;color:var(--sub)}
