@@ -37,20 +37,12 @@
     font:inherit;transition:.15s;
   }
   button.opt:hover:not(:disabled){border-color:var(--accent);transform:translateX(2px)}
-  button.opt:disabled{cursor:default;opacity:.75}
-  button.opt.correct{border-color:var(--ok);background:rgba(46,204,113,.14);opacity:1}
-  button.opt.wrong{border-color:var(--ng);background:rgba(255,95,109,.14);opacity:1}
+  button.opt:disabled{cursor:default;opacity:.5}
   .mark{font-weight:700;margin-right:8px;color:var(--sub)}
-  .fb{margin-top:16px;padding:13px 15px;border-radius:10px;border:1px solid var(--line);display:none}
-  .fb.show{display:block}
-  .fb b{display:block;margin-bottom:4px}
-  .fb.o b{color:var(--ok)} .fb.x b{color:var(--ng)}
-  .fb p{margin:0;font-size:.92rem;color:var(--sub)}
   .next{
     margin-top:16px;padding:11px 22px;border:none;border-radius:9px;
-    background:var(--accent);color:#fff;font:inherit;font-weight:700;cursor:pointer;display:none;
+    background:var(--accent);color:#fff;font:inherit;font-weight:700;cursor:pointer;
   }
-  .next.show{display:inline-block}
   .score{font-size:2.6rem;font-weight:800;margin:6px 0}
   .score small{font-size:1rem;color:var(--sub);font-weight:400}
   .rank{color:var(--accent);font-weight:700;margin-bottom:18px}
@@ -66,22 +58,20 @@
 <body>
 <div class="wrap">
   <h1>経済 4択問題集</h1>
-  <p class="lead">全20問・1問ずつ解答／最後に正解数を表示します</p>
+  <p class="lead">全20問・正誤は最後にまとめて発表します</p>
 
   <div class="card" id="quiz">
     <div class="bar"><i id="prog"></i></div>
-    <div class="meta"><span id="count"></span><span id="hit"></span></div>
+    <div class="meta"><span id="count"></span></div>
     <p class="q" id="qtext"></p>
     <div class="opts" id="opts"></div>
-    <div class="fb" id="fb"><b id="fbt"></b><p id="fbe"></p></div>
-    <button class="next" id="next">次の問題 →</button>
   </div>
 
   <div class="card hide" id="result">
     <div class="meta">結果</div>
     <div class="score"><span id="sc"></span><small> / 20 問正解</small></div>
     <div class="rank" id="rank"></div>
-    <button class="next show" id="retry">もう一度挑戦する</button>
+    <button class="next" id="retry">もう一度挑戦する</button>
     <ul class="rev" id="rev"></ul>
   </div>
 </div>
@@ -193,7 +183,6 @@ function render(){
   const item = order[idx];
   $("prog").style.width = (idx/QUESTIONS.length*100) + "%";
   $("count").textContent = `第 ${idx+1} 問 / ${QUESTIONS.length}`;
-  $("hit").textContent = `正解 ${score}`;
   $("qtext").textContent = item.q;
 
   const box = $("opts");
@@ -206,36 +195,20 @@ function render(){
     b.onclick = () => answer(i);
     box.appendChild(b);
   });
-
-  $("fb").className = "fb";
-  $("next").className = "next";
-  $("next").textContent = (idx === QUESTIONS.length-1) ? "結果を見る →" : "次の問題 →";
 }
 
 function answer(sel){
   const item = order[idx];
   const ok = sel === item.a;
   if(ok) score++;
-  log.push({q:item.q, ok, your:item.c[sel], right:item.c[item.a]});
+  log.push({q:item.q, ok, e:item.e, your:item.c[sel], right:item.c[item.a]});
 
-  [...$("opts").children].forEach((b,i)=>{
-    b.disabled = true;
-    if(i === item.a) b.classList.add("correct");
-    else if(i === sel) b.classList.add("wrong");
-  });
-
-  $("fb").className = "fb show " + (ok ? "o" : "x");
-  $("fbt").textContent = ok ? "○ 正解" : `× 不正解 ─ 正解は ${L[item.a]}`;
-  $("fbe").textContent = item.e;
-  $("hit").textContent = `正解 ${score}`;
-  $("next").classList.add("show");
-}
-
-$("next").onclick = () => {
+  // 正誤はその場では見せず、そのまま次の問題へ
+  [...$("opts").children].forEach(b => b.disabled = true);
   idx++;
   if(idx < QUESTIONS.length) render();
   else finish();
-};
+}
 
 function finish(){
   $("quiz").classList.add("hide");
@@ -255,8 +228,9 @@ function finish(){
   log.forEach((l,i)=>{
     const li = document.createElement("li");
     const mark = l.ok ? '<span class="o-i">○</span>' : '<span class="x-i">×</span>';
-    const detail = l.ok ? "" : `<div class="a">あなたの解答：${l.your}<br>正解：${l.right}</div>`;
-    li.innerHTML = `<div class="t">${mark}第${i+1}問 ${l.q}</div>${detail}`;
+    const yours = l.ok ? "" : `あなたの解答：${l.your}<br>`;
+    li.innerHTML = `<div class="t">${mark}第${i+1}問 ${l.q}</div>`
+                 + `<div class="a">${yours}正解：${l.right}<br>${l.e}</div>`;
     ul.appendChild(li);
   });
 }
